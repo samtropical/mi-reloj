@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mi Reloj">
+  <meta name="theme-color" content="#000000">
+
+  <title>Mi Reloj</title>
+
+  <style>
+    :root {
+      --bg: #f2f2f7;
+      --card: rgba(255,255,255,.82);
+      --text: #111111;
+      --muted: #77777f;
+      --border: rgba(0,0,0,.08);
+      --button: #111111;
+      --buttonText: white;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #000000;
+        --card: #1c1c1e;
+        --text: #f5f5f7;
+        --muted: #9a9aa1;
+        --border: rgba(255,255,255,.10);
+        --button: #ffffff;
+        --buttonText: #000000;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+                   "Helvetica Neue", Arial, sans-serif;
+      min-height: 100vh;
+      padding:
+        max(30px, env(safe-area-inset-top))
+        18px
+        max(30px, env(safe-area-inset-bottom));
+    }
+
+    .app {
+      max-width: 520px;
+      margin: auto;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 42px 10px 32px;
+    }
+
+    #date {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      text-transform: capitalize;
+    }
+
+    #time {
+      font-size: clamp(68px, 21vw, 100px);
+      font-weight: 650;
+      letter-spacing: -6px;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    #seconds {
+      margin-top: 12px;
+      font-size: 18px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    button {
+      font-family: inherit;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .tab {
+      min-height: 48px;
+      border-radius: 15px;
+      background: var(--card);
+      color: var(--text);
+      font-weight: 600;
+      border: 1px solid var(--border);
+    }
+
+    .tab.active {
+      background: var(--button);
+      color: var(--buttonText);
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 25px;
+      border: 1px solid var(--border);
+      padding: 22px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .clock-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .clock-info strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .big-number {
+      font-size: 52px;
+      font-weight: 650;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      padding: 24px 0 28px;
+      letter-spacing: -2px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn {
+      min-height: 50px;
+      padding: 0 22px;
+      border-radius: 16px;
+      background: var(--button);
+      color: var(--buttonText);
+      font-weight: 650;
+      font-size: 16px;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      min-height: 50px;
+      margin-top: 7px;
+      border-radius: 15px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      padding: 0 14px;
+      font-size: 20px;
+    }
+
+    .prepare {
+      width: 100%;
+      margin-top: 14px;
+    }
+
+    #timerStatus {
+      text-align: center;
+      color: var(--muted);
+      min-height: 23px;
+      margin-bottom: 16px;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <section class="hero">
+    <div id="date"></div>
+    <div id="time">--:--</div>
+    <div id="seconds">-- segundos</div>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab active" data-page="clock">Reloj</button>
+    <button class="tab" data-page="stopwatch">Cronómetro</button>
+    <button class="tab" data-page="timer">Temporizador</button>
+  </nav>
+
+  <section id="clock" class="card page">
+    <div class="clock-info">
+      <div>
+        <strong>Hora local</strong>
+        <div class="muted">Actualización automática</div>
+      </div>
+      <div id="timezone" class="muted"></div>
+    </div>
+  </section>
+
+  <section id="stopwatch" class="card page hidden">
+
+    <div id="stopwatchDisplay" class="big-number">
+      00:00.0
+    </div>
+
+    <div class="actions">
+      <button id="stopwatchStart" class="btn">
+        Iniciar
+      </button>
+
+      <button id="stopwatchReset" class="btn secondary">
+        Reiniciar
+      </button>
+    </div>
+
+  </section>
+
+  <section id="timer" class="card page hidden">
+
+    <div class="inputs">
+
+      <label>
+        Minutos
+        <input id="minutes" type="number" min="0" max="999" value="1">
+      </label>
+
+      <label>
+        Segundos
+        <input id="timerSeconds" type="number" min="0" max="59" value="0">
+      </label>
+
+    </div>
+
+    <button id="prepareTimer" class="btn prepare">
+      Preparar
+    </button>
+
+    <div id="timerDisplay" class="big-number">
+      01:00
+    </div>
+
+    <div id="timerStatus">
+      Preparado
+    </div>
+
+    <div class="actions">
+
+      <button id="timerStart" class="btn">
+        Iniciar
+      </button>
+
+      <button id="timerReset" class="btn secondary">
+        Reiniciar
+      </button>
+
+    </div>
+
+  </section>
+
+  <div class="footer">
+    Mi Reloj
+  </div>
+
+</div>
+
+<script>
+
+const $ = selector => document.querySelector(selector);
+
+/* RELOJ */
+
+function updateClock() {
+
+  const now = new Date();
+
+  $("#time").textContent =
+    now.toLocaleTimeString("es-ES", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
+  $("#seconds").textContent =
+    String(now.getSeconds()).padStart(2,"0") +
+    " segundos";
+
+  $("#date").textContent =
+    now.toLocaleDateString("es-ES", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+
+  $("#timezone").textContent =
+    Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
+updateClock();
+
+setInterval(updateClock,1000);
+
+
+/* PESTAÑAS */
+
+document.querySelectorAll(".tab").forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    document.querySelectorAll(".tab")
+      .forEach(b => b.classList.remove("active"));
+
+    button.classList.add("active");
+
+    document.querySelectorAll(".page")
+      .forEach(p => p.classList.add("hidden"));
+
+    document
+      .getElementById(button.dataset.page)
+      .classList.remove("hidden");
+
+  });
+
+});
+
+
+/* CRONÓMETRO */
+
+let swRunning = false;
+let swStart = 0;
+let swElapsed = 0;
+let swFrame;
+
+function renderStopwatch() {
+
+  let elapsed = swElapsed;
+
+  if(swRunning) {
+    elapsed += performance.now() - swStart;
+  }
+
+  const totalSeconds =
+    Math.floor(elapsed / 1000);
+
+  const minutes =
+    Math.floor(totalSeconds / 60);
+
+  const seconds =
+    totalSeconds % 60;
+
+  const tenths =
+    Math.floor(elapsed / 100) % 10;
+
+  $("#stopwatchDisplay").textContent =
+    String(minutes).padStart(2,"0") +
+    ":" +
+    String(seconds).padStart(2,"0") +
+    "." +
+    tenths;
+
+  if(swRunning) {
+    swFrame =
+      requestAnimationFrame(renderStopwatch);
+  }
+}
+
+$("#stopwatchStart").addEventListener("click", () => {
+
+  if(swRunning) {
+
+    swElapsed +=
+      performance.now() - swStart;
+
+    swRunning = false;
+
+    cancelAnimationFrame(swFrame);
+
+    $("#stopwatchStart").textContent =
+      "Continuar";
+
+  } else {
+
+    swStart = performance.now();
+
+    swRunning = true;
+
+    $("#stopwatchStart").textContent =
+      "Pausar";
+
+    renderStopwatch();
+  }
+
+});
+
+$("#stopwatchReset").addEventListener("click", () => {
+
+  swRunning = false;
+
+  swElapsed = 0;
+
+  cancelAnimationFrame(swFrame);
+
+  $("#stopwatchStart").textContent =
+    "Iniciar";
+
+  renderStopwatch();
+
+});
+
+
+/* TEMPORIZADOR */
+
+let timerTotal = 60;
+let timerRemaining = 60;
+let timerRunning = false;
+let timerInterval;
+let deadline;
+
+function renderTimer() {
+
+  const minutes =
+    Math.floor(timerRemaining / 60);
+
+  const seconds =
+    timerRemaining % 60;
+
+  $("#timerDisplay").textContent =
+    String(minutes).padStart(2,"0") +
+    ":" +
+    String(seconds).padStart(2,"0");
+
+}
+
+$("#prepareTimer").addEventListener("click", () => {
+
+  let minutes =
+    Number($("#minutes").value) || 0;
+
+  let seconds =
+    Number($("#timerSeconds").value) || 0;
+
+  minutes =
+    Math.max(0, Math.min(999, minutes));
+
+  seconds =
+    Math.max(0, Math.min(59, seconds));
+
+  timerTotal =
+    Math.max(1, minutes * 60 + seconds);
+
+  timerRemaining =
+    timerTotal;
+
+  clearInterval(timerInterval);
+
+  timerRunning = false;
+
+  $("#timerStart").textContent =
+    "Iniciar";
+
+  $("#timerStatus").textContent =
+    "Preparado";
+
+  renderTimer();
+
+});
+
+$("#timerStart").addEventListener("click", () => {
+
+  if(timerRunning) {
+
+    timerRemaining =
+      Math.max(
+        0,
+        Math.ceil(
+          (deadline - Date.now()) / 1000
+        )
+      );
+
+    clearInterval(timerInterval);
+
+    timerRunning = false;
+
+    $("#timerStart").textContent =
+      "Continuar";
+
+    $("#timerStatus").textContent =
+      "Pausado";
+
+    return;
+  }
+
+  if(timerRemaining <= 0) {
+    timerRemaining = timerTotal;
+  }
+
+  deadline =
+    Date.now() +
+    timerRemaining * 1000;
+
+  timerRunning = true;
+
+  $("#timerStart").textContent =
+    "Pausar";
+
+  $("#timerStatus").textContent =
+    "En marcha";
+
+  timerInterval =
+    setInterval(() => {
+
+      timerRemaining =
+        Math.max(
+          0,
+          Math.ceil(
+            (deadline - Date.now()) / 1000
+          )
+        );
+
+      renderTimer();
+
+      if(timerRemaining <= 0) {
+
+        clearInterval(timerInterval);
+
+        timerRunning = false;
+
+        $("#timerStart").textContent =
+          "Iniciar";
+
+        $("#timerStatus").textContent =
+          "⏰ ¡Tiempo terminado!";
+
+      }
+
+    },250);
+
+});
+
+$("#timerReset").addEventListener("click", () => {
+
+  clearInterval(timerInterval);
+
+  timerRunning = false;
+
+  timerRemaining =
+    timerTotal;
+
+  $("#timerStart").textContent =
+    "Iniciar";
+
+  $("#timerStatus").textContent =
+    "Preparado";
+
+  renderTimer();
+
+});
+
+renderStopwatch();
+renderTimer();
+
+</script>
+
+</body>
+</html>
