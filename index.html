@@ -3,26 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#0b0b0d">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Mi Reloj">
 
-<link rel="manifest" href="./manifest.webmanifest">
-
-<title>Mi Reloj</title>
+<title>Mi Reloj V2</title>
 
 <style>
 :root{
   color-scheme:light dark;
   --bg:#f2f2f7;
-  --card:#fff;
-  --text:#111;
-  --muted:#81818a;
-  --line:rgba(0,0,0,.08);
-  --main:#111;
-  --inverse:#fff;
+  --card:#ffffff;
+  --text:#111114;
+  --muted:#777780;
   --soft:#e9e9ee;
+  --line:rgba(0,0,0,.08);
+  --primary:#111114;
+  --primaryText:#fff;
 }
 
 @media(prefers-color-scheme:dark){
@@ -31,10 +29,10 @@
     --card:#1c1c1e;
     --text:#f5f5f7;
     --muted:#98989f;
-    --line:rgba(255,255,255,.10);
-    --main:#fff;
-    --inverse:#000;
     --soft:#2c2c2e;
+    --line:rgba(255,255,255,.10);
+    --primary:#fff;
+    --primaryText:#000;
   }
 }
 
@@ -50,8 +48,8 @@ body{
   color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
   padding:
-    max(24px,env(safe-area-inset-top))
-    18px
+    max(25px,env(safe-area-inset-top))
+    17px
     max(30px,env(safe-area-inset-bottom));
 }
 
@@ -60,22 +58,34 @@ body{
   margin:auto;
 }
 
+.version{
+  width:max-content;
+  margin:10px auto 0;
+  background:var(--soft);
+  padding:7px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  color:var(--muted);
+}
+
 .hero{
   text-align:center;
-  padding:38px 0 30px;
+  padding:22px 0 30px;
 }
 
 .date{
   color:var(--muted);
+  font-size:16px;
   font-weight:600;
   text-transform:capitalize;
   margin-bottom:12px;
 }
 
 .time{
-  font-size:clamp(68px,21vw,104px);
+  font-size:clamp(70px,21vw,105px);
+  font-weight:720;
   line-height:.95;
-  font-weight:700;
   letter-spacing:-.07em;
   font-variant-numeric:tabular-nums;
 }
@@ -83,14 +93,16 @@ body{
 .seconds{
   color:var(--muted);
   margin-top:14px;
-  font-size:18px;
+  font-size:17px;
 }
 
 .tabs{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin-bottom:14px;
+  background:var(--soft);
+  border-radius:20px;
+  padding:5px;
+  margin-bottom:16px;
 }
 
 button,input{
@@ -100,21 +112,20 @@ button,input{
 button{
   border:0;
   cursor:pointer;
-  touch-action:manipulation;
 }
 
 .tab{
-  min-height:50px;
-  border-radius:17px;
-  background:var(--card);
-  color:var(--text);
+  min-height:48px;
+  border-radius:16px;
+  background:transparent;
+  color:var(--muted);
   font-weight:650;
-  border:1px solid var(--line);
 }
 
 .tab.active{
-  background:var(--main);
-  color:var(--inverse);
+  background:var(--card);
+  color:var(--text);
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
 .card{
@@ -131,41 +142,43 @@ button{
 .info{
   display:flex;
   justify-content:space-between;
-  gap:16px;
   align-items:center;
+  gap:20px;
 }
 
-.info strong{
-  font-size:18px;
+.infoTitle{
+  font-size:19px;
+  font-weight:700;
 }
 
 .muted{
   color:var(--muted);
   font-size:14px;
+  margin-top:5px;
 }
 
 .display{
-  font-size:52px;
-  text-align:center;
+  font-size:54px;
   font-weight:700;
   letter-spacing:-.04em;
   font-variant-numeric:tabular-nums;
-  padding:24px 0;
+  text-align:center;
+  padding:25px 0;
 }
 
 .actions{
   display:flex;
   justify-content:center;
-  gap:10px;
+  gap:9px;
   flex-wrap:wrap;
 }
 
 .btn{
-  min-height:52px;
-  padding:0 22px;
+  min-height:51px;
   border-radius:17px;
-  background:var(--main);
-  color:var(--inverse);
+  padding:0 21px;
+  background:var(--primary);
+  color:var(--primaryText);
   font-weight:650;
 }
 
@@ -193,13 +206,13 @@ input{
   display:block;
   width:100%;
   min-height:52px;
-  margin-top:6px;
-  border:1px solid var(--line);
+  margin-top:7px;
+  border:0;
   border-radius:16px;
-  padding:0 14px;
   background:var(--soft);
   color:var(--text);
-  font-size:19px;
+  padding:0 14px;
+  font-size:20px;
 }
 
 .full{
@@ -211,25 +224,34 @@ input{
   text-align:center;
   color:var(--muted);
   min-height:22px;
-  margin-bottom:14px;
+  margin-bottom:15px;
 }
 
 .laps{
   margin-top:20px;
-  border-top:1px solid var(--line);
-  padding-top:10px;
 }
 
 .lap{
   display:flex;
   justify-content:space-between;
-  padding:10px 2px;
-  border-bottom:1px solid var(--line);
+  border-top:1px solid var(--line);
+  padding:12px 2px;
   font-variant-numeric:tabular-nums;
 }
 
-.lap span:first-child{
+.lap span{
   color:var(--muted);
+}
+
+.finished{
+  animation:pulse .55s ease 5;
+}
+
+@keyframes pulse{
+  50%{
+    transform:scale(1.08);
+    opacity:.55;
+  }
 }
 
 .footer{
@@ -238,23 +260,14 @@ input{
   font-size:12px;
   margin-top:20px;
 }
-
-.finished{
-  animation:pulse .7s ease 4;
-}
-
-@keyframes pulse{
-  50%{
-    transform:scale(1.04);
-    opacity:.55;
-  }
-}
 </style>
 </head>
 
 <body>
 
 <main class="app">
+
+<div class="version">MI RELOJ · V2</div>
 
 <section class="hero">
   <div id="date" class="date"></div>
@@ -271,16 +284,19 @@ input{
 <section id="clock" class="card page">
   <div class="info">
     <div>
-      <strong>Hora local</strong>
+      <div class="infoTitle">Hora local</div>
       <div class="muted">Actualización automática</div>
     </div>
+
     <div id="timezone" class="muted"></div>
   </div>
 </section>
 
 <section id="stopwatch" class="card page hidden">
 
-  <div id="swDisplay" class="display">00:00.0</div>
+  <div id="swDisplay" class="display">
+    00:00.0
+  </div>
 
   <div class="actions">
     <button id="swStart" class="btn">Iniciar</button>
@@ -298,55 +314,80 @@ input{
 
     <label>
       Minutos
-      <input id="minutes" type="number" inputmode="numeric" min="0" max="999" value="1">
+      <input id="minutes"
+             type="number"
+             inputmode="numeric"
+             value="1"
+             min="0"
+             max="999">
     </label>
 
     <label>
       Segundos
-      <input id="timerSeconds" type="number" inputmode="numeric" min="0" max="59" value="0">
+      <input id="timerSeconds"
+             type="number"
+             inputmode="numeric"
+             value="0"
+             min="0"
+             max="59">
     </label>
 
   </div>
 
   <button id="prepareTimer" class="btn full">
-    Preparar temporizador
+    Preparar
   </button>
 
-  <div id="timerDisplay" class="display">01:00</div>
+  <div id="timerDisplay" class="display">
+    01:00
+  </div>
 
-  <div id="timerStatus" class="status">Preparado</div>
+  <div id="timerStatus" class="status">
+    Preparado
+  </div>
 
   <div class="actions">
-    <button id="timerStart" class="btn">Iniciar</button>
-    <button id="timerReset" class="btn secondary">Reiniciar</button>
+
+    <button id="timerStart" class="btn">
+      Iniciar
+    </button>
+
+    <button id="timerReset" class="btn secondary">
+      Reiniciar
+    </button>
+
   </div>
 
 </section>
 
-<div class="footer">Mi Reloj</div>
+<div class="footer">
+  Mi Reloj · versión 2
+</div>
 
 </main>
 
 <script>
 
-const $ = s => document.querySelector(s);
+const $ = x => document.querySelector(x);
+
 
 /* RELOJ */
 
 function updateClock(){
 
-  const now = new Date();
+  const now=new Date();
 
-  $("#time").textContent =
+  $("#time").textContent=
     now.toLocaleTimeString("es-ES",{
       hour:"2-digit",
       minute:"2-digit"
     });
 
-  $("#seconds").textContent =
-    String(now.getSeconds()).padStart(2,"0") + " segundos";
+  $("#seconds").textContent=
+    String(now.getSeconds()).padStart(2,"0")+
+    " segundos";
 
-  $("#date").textContent =
+  $("#date").textContent=
     now.toLocaleDateString("es-ES",{
       weekday:"long",
       day:"numeric",
@@ -354,11 +395,15 @@ function updateClock(){
       year:"numeric"
     });
 
-  $("#timezone").textContent =
-    Intl.DateTimeFormat().resolvedOptions().timeZone;
+  $("#timezone").textContent=
+    Intl.DateTimeFormat()
+      .resolvedOptions()
+      .timeZone;
+
 }
 
 updateClock();
+
 setInterval(updateClock,1000);
 
 
@@ -369,10 +414,14 @@ document.querySelectorAll(".tab").forEach(btn=>{
   btn.addEventListener("click",()=>{
 
     document.querySelectorAll(".tab")
-      .forEach(x=>x.classList.toggle("active",x===btn));
+      .forEach(x=>
+        x.classList.toggle("active",x===btn)
+      );
 
     document.querySelectorAll(".page")
-      .forEach(x=>x.classList.add("hidden"));
+      .forEach(x=>
+        x.classList.add("hidden")
+      );
 
     document
       .getElementById(btn.dataset.page)
@@ -391,33 +440,42 @@ function unlockAudio(){
 
   if(!audioContext){
 
-    audioContext =
-      new (window.AudioContext || window.webkitAudioContext)();
+    audioContext=
+      new (
+        window.AudioContext ||
+        window.webkitAudioContext
+      )();
 
   }
 
-  if(audioContext.state === "suspended"){
+  if(audioContext.state==="suspended"){
     audioContext.resume();
   }
 
 }
 
-function beep(){
+function playAlarm(){
 
   unlockAudio();
 
-  [0,.25,.5].forEach(t=>{
+  [0,.25,.5,.75].forEach(t=>{
 
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
+    const osc=
+      audioContext.createOscillator();
 
-    oscillator.connect(gain);
-    gain.connect(audioContext.destination);
+    const gain=
+      audioContext.createGain();
 
-    oscillator.frequency.value = 880;
+    osc.connect(gain);
+
+    gain.connect(
+      audioContext.destination
+    );
+
+    osc.frequency.value=880;
 
     gain.gain.setValueAtTime(
-      .0001,
+      .001,
       audioContext.currentTime+t
     );
 
@@ -427,12 +485,17 @@ function beep(){
     );
 
     gain.gain.exponentialRampToValueAtTime(
-      .0001,
+      .001,
       audioContext.currentTime+t+.18
     );
 
-    oscillator.start(audioContext.currentTime+t);
-    oscillator.stop(audioContext.currentTime+t+.2);
+    osc.start(
+      audioContext.currentTime+t
+    );
+
+    osc.stop(
+      audioContext.currentTime+t+.2
+    );
 
   });
 
@@ -441,33 +504,47 @@ function beep(){
 
 /* CRONÓMETRO */
 
-let swRunning = false;
-let swStarted = 0;
-let swElapsed = 0;
+let swRunning=false;
+let swStarted=0;
+let swElapsed=0;
 let swRAF;
-let lapNumber = 0;
+let lapNumber=0;
 
-function currentSW(){
+function swCurrent(){
 
-  return swRunning
-    ? swElapsed + performance.now() - swStarted
-    : swElapsed;
+  if(swRunning){
+
+    return (
+      swElapsed+
+      performance.now()-
+      swStarted
+    );
+
+  }
+
+  return swElapsed;
 
 }
 
 function formatSW(ms){
 
-  const total = Math.floor(ms/1000);
+  const total=
+    Math.floor(ms/1000);
 
-  const m = Math.floor(total/60);
-  const s = total%60;
-  const tenth = Math.floor(ms/100)%10;
+  const min=
+    Math.floor(total/60);
+
+  const sec=
+    total%60;
+
+  const tenth=
+    Math.floor(ms/100)%10;
 
   return (
-    String(m).padStart(2,"0") +
-    ":" +
-    String(s).padStart(2,"0") +
-    "." +
+    String(min).padStart(2,"0")+
+    ":"+
+    String(sec).padStart(2,"0")+
+    "."+
     tenth
   );
 
@@ -475,11 +552,16 @@ function formatSW(ms){
 
 function renderSW(){
 
-  $("#swDisplay").textContent =
-    formatSW(currentSW());
+  $("#swDisplay").textContent=
+    formatSW(swCurrent());
 
   if(swRunning){
-    swRAF = requestAnimationFrame(renderSW);
+
+    swRAF=
+      requestAnimationFrame(
+        renderSW
+      );
+
   }
 
 }
@@ -488,21 +570,30 @@ $("#swStart").addEventListener("click",()=>{
 
   if(swRunning){
 
-    swElapsed += performance.now()-swStarted;
-    swRunning = false;
+    swElapsed+=
+      performance.now()-
+      swStarted;
+
+    swRunning=false;
 
     cancelAnimationFrame(swRAF);
 
-    $("#swStart").textContent = "Continuar";
-    $("#swLap").disabled = true;
+    $("#swStart").textContent=
+      "Continuar";
+
+    $("#swLap").disabled=true;
 
   }else{
 
-    swStarted = performance.now();
-    swRunning = true;
+    swStarted=
+      performance.now();
 
-    $("#swStart").textContent = "Pausar";
-    $("#swLap").disabled = false;
+    swRunning=true;
+
+    $("#swStart").textContent=
+      "Pausar";
+
+    $("#swLap").disabled=false;
 
     renderSW();
 
@@ -512,21 +603,25 @@ $("#swStart").addEventListener("click",()=>{
 
 $("#swLap").addEventListener("click",()=>{
 
-  if(!swRunning) return;
+  if(!swRunning)return;
 
   lapNumber++;
 
-  const list = $("#lapList");
+  const list=$("#lapList");
 
   list.classList.remove("hidden");
 
-  const row = document.createElement("div");
+  const row=
+    document.createElement("div");
 
-  row.className = "lap";
+  row.className="lap";
 
-  row.innerHTML =
-    "<span>Vuelta "+lapNumber+"</span>"+
-    "<strong>"+formatSW(currentSW())+"</strong>";
+  row.innerHTML=
+    "<span>Vuelta "+
+    lapNumber+
+    "</span><strong>"+
+    formatSW(swCurrent())+
+    "</strong>";
 
   list.prepend(row);
 
@@ -534,17 +629,24 @@ $("#swLap").addEventListener("click",()=>{
 
 $("#swReset").addEventListener("click",()=>{
 
-  swRunning = false;
-  swElapsed = 0;
-  lapNumber = 0;
+  swRunning=false;
+
+  swElapsed=0;
+
+  lapNumber=0;
 
   cancelAnimationFrame(swRAF);
 
-  $("#swStart").textContent = "Iniciar";
-  $("#swLap").disabled = true;
+  $("#swStart").textContent=
+    "Iniciar";
 
-  $("#lapList").innerHTML = "";
-  $("#lapList").classList.add("hidden");
+  $("#swLap").disabled=true;
+
+  $("#lapList").innerHTML="";
+
+  $("#lapList")
+    .classList
+    .add("hidden");
 
   renderSW();
 
@@ -553,34 +655,24 @@ $("#swReset").addEventListener("click",()=>{
 
 /* TEMPORIZADOR */
 
-let timerTotal = 60;
-let timerRemaining = 60;
-let timerRunning = false;
+let timerTotal=60;
+let timerRemaining=60;
+let timerRunning=false;
 let timerInterval;
 let deadline;
 
 function renderTimer(){
 
-  const m = Math.floor(timerRemaining/60);
-  const s = timerRemaining%60;
+  const min=
+    Math.floor(timerRemaining/60);
 
-  $("#timerDisplay").textContent =
-    String(m).padStart(2,"0") +
-    ":" +
-    String(s).padStart(2,"0");
+  const sec=
+    timerRemaining%60;
 
-}
-
-function pauseTimer(){
-
-  timerRemaining = Math.max(
-    0,
-    Math.ceil((deadline-Date.now())/1000)
-  );
-
-  clearInterval(timerInterval);
-
-  timerRunning = false;
+  $("#timerDisplay").textContent=
+    String(min).padStart(2,"0")+
+    ":"+
+    String(sec).padStart(2,"0");
 
 }
 
@@ -588,25 +680,45 @@ $("#prepareTimer").addEventListener("click",()=>{
 
   unlockAudio();
 
-  let m = Number($("#minutes").value)||0;
-  let s = Number($("#timerSeconds").value)||0;
+  let min=
+    Number($("#minutes").value)||0;
 
-  m = Math.max(0,Math.min(999,m));
-  s = Math.max(0,Math.min(59,s));
+  let sec=
+    Number($("#timerSeconds").value)||0;
 
-  timerTotal = Math.max(1,m*60+s);
-  timerRemaining = timerTotal;
+  min=Math.max(
+    0,
+    Math.min(999,min)
+  );
+
+  sec=Math.max(
+    0,
+    Math.min(59,sec)
+  );
+
+  timerTotal=
+    Math.max(
+      1,
+      min*60+sec
+    );
+
+  timerRemaining=
+    timerTotal;
 
   clearInterval(timerInterval);
 
-  timerRunning = false;
+  timerRunning=false;
 
-  $("#timerStart").textContent = "Iniciar";
-  $("#timerStatus").textContent = "Preparado";
+  $("#timerStart").textContent=
+    "Iniciar";
+
+  $("#timerStatus").textContent=
+    "Preparado";
 
   renderTimer();
 
 });
+
 
 $("#timerStart").addEventListener("click",()=>{
 
@@ -614,10 +726,23 @@ $("#timerStart").addEventListener("click",()=>{
 
   if(timerRunning){
 
-    pauseTimer();
+    timerRemaining=
+      Math.max(
+        0,
+        Math.ceil(
+          (deadline-Date.now())/1000
+        )
+      );
 
-    $("#timerStart").textContent = "Continuar";
-    $("#timerStatus").textContent = "Pausado";
+    clearInterval(timerInterval);
+
+    timerRunning=false;
+
+    $("#timerStart").textContent=
+      "Continuar";
+
+    $("#timerStatus").textContent=
+      "Pausado";
 
     renderTimer();
 
@@ -626,79 +751,92 @@ $("#timerStart").addEventListener("click",()=>{
   }
 
   if(timerRemaining<=0){
-    timerRemaining = timerTotal;
+
+    timerRemaining=
+      timerTotal;
+
   }
 
-  deadline = Date.now() + timerRemaining*1000;
+  deadline=
+    Date.now()+
+    timerRemaining*1000;
 
-  timerRunning = true;
+  timerRunning=true;
 
-  $("#timerStart").textContent = "Pausar";
-  $("#timerStatus").textContent = "En marcha";
+  $("#timerStart").textContent=
+    "Pausar";
 
-  timerInterval = setInterval(()=>{
+  $("#timerStatus").textContent=
+    "En marcha";
 
-    timerRemaining = Math.max(
-      0,
-      Math.ceil((deadline-Date.now())/1000)
-    );
+  timerInterval=
+    setInterval(()=>{
 
-    renderTimer();
+      timerRemaining=
+        Math.max(
+          0,
+          Math.ceil(
+            (deadline-Date.now())/1000
+          )
+        );
 
-    if(timerRemaining<=0){
+      renderTimer();
 
-      clearInterval(timerInterval);
+      if(timerRemaining<=0){
 
-      timerRunning = false;
+        clearInterval(timerInterval);
 
-      $("#timerStart").textContent = "Iniciar";
-      $("#timerStatus").textContent = "⏰ ¡Tiempo terminado!";
+        timerRunning=false;
 
-      $("#timerDisplay").classList.add("finished");
+        $("#timerStart").textContent=
+          "Iniciar";
 
-      setTimeout(()=>{
-        $("#timerDisplay").classList.remove("finished");
-      },3000);
+        $("#timerStatus").textContent=
+          "⏰ ¡Tiempo terminado!";
 
-      beep();
+        $("#timerDisplay")
+          .classList
+          .add("finished");
 
-    }
+        setTimeout(()=>{
 
-  },200);
+          $("#timerDisplay")
+            .classList
+            .remove("finished");
+
+        },3000);
+
+        playAlarm();
+
+      }
+
+    },200);
 
 });
+
 
 $("#timerReset").addEventListener("click",()=>{
 
   clearInterval(timerInterval);
 
-  timerRunning = false;
-  timerRemaining = timerTotal;
+  timerRunning=false;
 
-  $("#timerStart").textContent = "Iniciar";
-  $("#timerStatus").textContent = "Preparado";
+  timerRemaining=
+    timerTotal;
+
+  $("#timerStart").textContent=
+    "Iniciar";
+
+  $("#timerStatus").textContent=
+    "Preparado";
 
   renderTimer();
 
 });
 
+
 renderSW();
 renderTimer();
-
-
-/* FUNCIONAMIENTO OFFLINE */
-
-if("serviceWorker" in navigator){
-
-  window.addEventListener("load",()=>{
-
-    navigator.serviceWorker
-      .register("./service-worker.js")
-      .catch(()=>{});
-
-  });
-
-}
 
 </script>
 
